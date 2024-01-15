@@ -7,9 +7,10 @@ interface Props{
     cancelSelectActivity: ()=> void
     openForm:(id: string) => void;
 
+
 }
 
-export default function ActivityDetails({activity, cancelSelectActivity, openForm}:Props) {
+export default function ActivityDetails({activity, cancelSelectActivity, openForm,}:Props) {
     return(
         <Card fluid>
             <Image src={ `/assets/categoryImages/${activity.category}.jpg`} />

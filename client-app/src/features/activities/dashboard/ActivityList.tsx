@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { Activity } from "../../../app/models/activity";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 
@@ -6,12 +6,18 @@ interface Props{
     activities: Activity[];
     deleteActivity: (id: string) => void;
     selectActivity: (id:string)=> void
-    cancelSelectActivity: () => void;
+    submitting: boolean;
 
 }
 
-export default function ActivityList({activities, selectActivity, deleteActivity, cancelSelectActivity}:Props){
-    return(
+export default function ActivityList({activities, selectActivity, deleteActivity, submitting}:Props){
+    const[target, setTarget]= useState('');
+
+    function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id : string){
+        setTarget(e.currentTarget.name);
+        deleteActivity(id);
+    }
+    return( 
         <Segment>
             <Item.Group divided>
                 {activities.map((activity: Activity) =>(
@@ -24,8 +30,14 @@ export default function ActivityList({activities, selectActivity, deleteActivity
                                 <div>{activity.city}, {activity.venue}</div>
                                 <Item.Extra>
                                     <Button onClick={() => selectActivity(activity.id)} floated="right" content= 'View' color="blue" />
-                                    <Button onClick={() => {deleteActivity(activity.id); cancelSelectActivity()}} floated="right" content= 'Delete' color="red" />
-                                    <Label basic content={activity.category} />
+                                    <Button
+                                        name={activity.id}
+                                        loading={submitting && target===activity.id} 
+                                        onClick={(e) => {handleActivityDelete(e, activity.id)}} 
+                                        floated="right" 
+                                        content= 'Delete' 
+                                        color="red" />
+                                        <Label basic content={activity.category} />
                                 </Item.Extra>
                             </Item.Description>
                         </Item.Content>
